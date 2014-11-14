@@ -4,12 +4,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>{% block title %}{% endblock %} | Cupon</title>
     </head>
-    <body id="{% block id '' %}"><div id="contenedor">
+    <body id="{% block id '' %}">
+        <div id="contenedor">
+            {% set ciudadSeleccionada = app.request.attributes.has('ciudad')? app.request.attributes.get('ciudad'): ciudad_por_defecto %}
             <header>
-                <h1><a href="{{ path('portada') }}">CUPON</a></h1>
+                <h1><a href="{{ path('portada',{'ciudad':ciudadSeleccionada}) }}">CUPON</a></h1>
                 <nav>
                     <ul>
-                        <li><a href="{{ path('portada') }}">Oferta del día</a></li>
+                        <li><a href="{{ path('portada',{'ciudad':ciudadSeleccionada}) }}">Oferta del día</a></li>
                         <li><a href="#">Ofertas recientes</a></li>
                         <li><a href="#">Mis ofertas</a></li>
                     </ul>
@@ -19,7 +21,7 @@
                 {% block article %}{% endblock %}
             </article>
             <aside>
-                {% block aside %}{% endblock %}
+            {% block aside %}{% endblock %}
             </aside>
             <footer>
                 &copy; {{ 'now' | date('Y') }} - Cupon
