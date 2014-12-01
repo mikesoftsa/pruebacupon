@@ -45,39 +45,32 @@ class CuponExtension extends \Twig_Extension {
 
     public function cuentaAtras($fecha) {
 
-        $fecha = $fecha->format('Y,')
-                . ($fecha->format('m') - 1)
-                . $fecha->format(',d,H,i,s');
+        // En JavaScript los meses empiezan a contar en 0 y acaban en 12
+        // En PHP los meses van de 1 a 12, por lo que hay que convertir la fecha
+        $fecha = json_encode(array(
+            'ano' => $fecha->format('Y'),
+            'mes' => $fecha->format('m')-1,
+            'dia' => $fecha->format('d'),
+            'hora'    => $fecha->format('H'),
+            'minuto'  => $fecha->format('i'),
+            'segundo' => $fecha->format('s')
+        ));
+
+        $idAleatorio = 'cuenta-atras-'.rand(1, 100000);
         $html = <<<EOJ
-<script type="text/javascript">
-function muestraCuentaAtras(){
-var horas, minutos, segundos;
-var ahora = new Date();
-var fechaExpiracion = new Date($fecha);
-var falta = Math.floor( (fechaExpiracion.getTime() - ahora.getTime()) /
-1000 );
-if (falta < 0) {
-cuentaAtras = '-';
-}
-else {
-horas = Math.floor(falta/3600);
-falta = falta % 3600;
-minutos = Math.floor(falta/60);
-falta = falta % 60;
-segundos = Math.floor(falta);
-cuentaAtras = (horas < 10
-? '0' + horas
-: horas)
-+ 'h '
-+ (minutos < 10 ? '0' + minutos : minutos) + 'm '
-+ (segundos < 10 ? '0' + segundos : segundos) + 's ';
-setTimeout('muestraCuentaAtras()', 1000);
-}
-document.getElementById('tiempo').innerHTML = '<strong>Faltan:</strong> ' +
-cuentaAtras;
-}
-muestraCuentaAtras();
-</script>
+        <span id="$idAleatorio"></span>
+
+        <script type="text/javascript">
+        funcion_expira = function(){
+            var expira = $fecha;
+            muestraCuentaAtras('$idAleatorio', expira);
+        }
+        if (!window.addEventListener) {
+            window.attachEvent("onload", funcion_expira);
+        } else {
+            window.addEventListener('load', funcion_expira);
+        }
+        </script>
 EOJ;
         return $html;
     }

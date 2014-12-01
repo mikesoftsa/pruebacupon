@@ -14,7 +14,9 @@
         <section class="estado {{ expirada ? 'expirada' : '' }}">
             {% if not expirada %}
             <div class="tiempo" id="tiempo">
-                <strong>Faltan</strong>: {{ oferta.fechaExpiracion | cuenta_atras }}
+                {% trans with {'%tiempo%': oferta.fechaExpiracion | cuenta_atras } %}
+                <strong>Faltan</strong>: %tiempo%
+                {% endtrans %}
             </div>
             <div class="compras">
                 <strong>Compras</strong>: {{ oferta.compras }}
