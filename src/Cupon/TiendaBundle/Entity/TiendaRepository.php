@@ -13,9 +13,9 @@ class TiendaRepository extends EntityRepository {
             FROM OfertaBundle:Oferta o
             JOIN o.tienda t
             WHERE o.revisada = true
-            AND o.fecha_publicacion < :fecha
+            AND o.fechaPublicacion < :fecha
             AND o.tienda = :id
-            ORDER BY o.fecha_expiracion DESC');
+            ORDER BY o.fechaExpiracion DESC');
         $consulta->setMaxResults($limite);
         $consulta->setParameter('id', $tienda_id);
         $consulta->setParameter('fecha', new \DateTime('now'));
